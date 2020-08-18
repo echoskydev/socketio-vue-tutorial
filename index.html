@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Hello Socket IO</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+
+    <div class="jumbotron" id="app">
+        <h1 class="display-5">Socket Communication Tutorial</h1>
+        <p class="lead">
+            Socket IO & Vue Tutorial
+        </p>
+        <hr class="my-2">
+        <p>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="chatText" id="chatText" aria-describedby="helpId"
+                        placeholder="Message" v-model="message" v-on:keyup.enter='send'>
+                    <small id="helpId" class="form-text text-muted">Type message and enter</small>
+                </div>
+            </div>
+            <div class="col">
+                <ul id="messages">
+                    <li v-for="message in messages">{{ message }}</li>
+                </ul>
+            </div>
+        </div>
+        </p>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+    <!-- Socket IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        let socket = io();
+
+
+        // Vue
+        new Vue({
+            el: '#app',
+
+            data: {
+                messages: [],
+                message: '' //v-model
+            },
+
+            mounted() {
+                socket.on('chat.message', (message) => {
+                    this.messages.push(message);
+
+                });
+            },
+
+            methods: {
+                send: function (e) {
+                    console.log('send');
+                    socket.emit('chat.message', this.message);
+                    this.message = '';
+                    e.preventDefault();
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
